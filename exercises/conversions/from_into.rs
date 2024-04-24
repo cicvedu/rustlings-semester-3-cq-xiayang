@@ -7,6 +7,8 @@
 // Execute `rustlings hint from_into` or use the `hint` watch subcommand for a
 // hint.
 
+use std::fs::Permissions;
+
 #[derive(Debug)]
 struct Person {
     name: String,
@@ -40,10 +42,29 @@ impl Default for Person {
 // If while parsing the age, something goes wrong, then return the default of
 // Person Otherwise, then return an instantiated Person object with the results
 
-// I AM NOT DONE
-
 impl From<&str> for Person {
     fn from(s: &str) -> Person {
+        if s.is_empty() {
+            Person::default()
+        } else {
+            let mut s1 = s.split(',');
+            let name = match s1.next() {
+                Some("") | None => return Person::default(),
+                Some(x) => String::from(x),
+            };
+            let age = match s1.next() {
+                Some(x) => match x.parse::<usize>() {
+                    Ok(x) => x,
+                    Err(_) => return Person::default(),
+                },
+                None => return Person::default(),
+            };
+            match s1.next() {
+                Some(_) => return Person::default(),
+                None => return Person { name, age },
+            };
+            //Person::default()
+        }
     }
 }
 
